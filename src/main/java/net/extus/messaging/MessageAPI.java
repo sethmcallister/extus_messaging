@@ -1,12 +1,12 @@
-package xyz.sethy.extus.messaging;
+package net.extus.messaging;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import xyz.sethy.extus.messaging.alert.AlertMessage;
-import xyz.sethy.extus.messaging.alert.AlertResponseMessage;
-import xyz.sethy.extus.messaging.report.ReportIdMessage;
-import xyz.sethy.extus.messaging.report.ReportIdResponseMessage;
-import xyz.sethy.extus.messaging.report.ReportSubmitMessage;
+import net.extus.messaging.alert.AlertMessage;
+import net.extus.messaging.alert.AlertResponseMessage;
+import net.extus.messaging.report.ReportIdMessage;
+import net.extus.messaging.report.ReportIdResponseMessage;
+import net.extus.messaging.report.ReportSubmitMessage;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

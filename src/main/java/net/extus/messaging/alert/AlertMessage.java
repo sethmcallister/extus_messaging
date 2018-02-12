@@ -1,4 +1,4 @@
-package xyz.sethy.extus.messaging.alert;
+package net.extus.messaging.alert;
 
 
 import xyz.sethy.extus.api.cheat.CheatType;

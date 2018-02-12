@@ -10,6 +10,7 @@ import net.extus.messaging.report.ReportSubmitMessage;
 import net.extus.messaging.user.UserGetMessage;
 import net.extus.messaging.user.UserGetNameMessage;
 import net.extus.messaging.user.UserGetResponseMessage;
+import net.extus.messaging.user.UserUpdateMessage;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -25,6 +26,7 @@ public class MessageAPI {
     private static final String REPORT_SUBMIT_URL_API = "https://api.extus.net/v1/report-submit";
     private static final String USER_GET_URL_API = "https://api.extus.net/v1/user";
     private static final String USER_GET_NAME_URL_API = "https://api.extus.net/v1/user-name";
+    private static final String USER_UPDATE_URL_API = "https://api.extus.net/v1/user-update";
 
     public static AlertResponseMessage sendAlertMessage(final AlertMessage alertMessage) {
         try {
@@ -203,6 +205,25 @@ public class MessageAPI {
             connection.setRequestProperty("Content-type", "application/json");
 
             String input = GSON.toJson(reportSubmitMessage);
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(input.getBytes());
+            outputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendUserUpdate(final UserUpdateMessage userUpdateMessage) {
+        try {
+            URL url = new URL(USER_UPDATE_URL_API);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-type", "application/json");
+
+            String input = GSON.toJson(userUpdateMessage);
 
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(input.getBytes());

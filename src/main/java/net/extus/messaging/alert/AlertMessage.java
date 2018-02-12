@@ -1,7 +1,7 @@
 package net.extus.messaging.alert;
 
 
-import xyz.sethy.extus.api.cheat.CheatType;
+import net.extus.api.cheat.CheatType;
 
 import java.util.UUID;
 

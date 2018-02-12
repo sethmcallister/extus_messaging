@@ -7,18 +7,23 @@ import net.extus.messaging.alert.AlertResponseMessage;
 import net.extus.messaging.report.ReportIdMessage;
 import net.extus.messaging.report.ReportIdResponseMessage;
 import net.extus.messaging.report.ReportSubmitMessage;
+import net.extus.messaging.user.UserGetMessage;
+import net.extus.messaging.user.UserGetResponseMessage;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 
 public class MessageAPI {
     private static final Gson GSON = new GsonBuilder().create();
-    private static final String VIOLATION_URL_API = "http://151.80.144.214:8082/api/v1/violations";
-    private static final String REPORT_ID_URL_API = "http://151.80.144.214:8082/api/v1/report-id";
-    private static final String REPORT_SUBMITT_URL_API = "http://151.80.144.214:8082/api/v1/report-submit";
+    private static final String VIOLATION_URL_API = "https://api.extus.net/v1/violations";
+    private static final String REPORT_ID_URL_API = "https://api.extus.net/v1/report-id";
+    private static final String REPORT_SUBMIT_URL_API = "https://api.extus.net/v1/report-submit";
+    private static final String USER_GET_URL_API = "https://api.extus.net/v1/user";
+
 
     public static AlertResponseMessage sendAlertMessage(final AlertMessage alertMessage) {
         try {
@@ -57,7 +62,7 @@ public class MessageAPI {
             if (!responseMessage.getPlayerUUID().equals(alertMessage.getPlayerUUID()))
                 return null;
 
-            if (!responseMessage.getCheatType().equals(alertMessage.getCheatType()))
+            if (!Objects.equals(responseMessage.getCheatType(), alertMessage.getCheatType()))
                 return null;
 
             return responseMessage;
@@ -110,9 +115,48 @@ public class MessageAPI {
         return null;
     }
 
+    public static UserGetResponseMessage sendUserGetMessage(final UserGetMessage userGetMessage) {
+        try {
+            URL url = new URL(USER_GET_URL_API);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-type", "application/json");
+
+            String input = GSON.toJson(userGetMessage);
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(input.getBytes());
+            outputStream.close();
+
+            if (connection.getResponseCode() != 200) {
+                System.out.println(String.format("Response Code: %s", connection.getResponseCode()));
+                return null;
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            StringBuilder output = new StringBuilder();
+            String line;
+            while((line = reader.readLine()) != null) {
+                output.append(line);
+            }
+
+            UserGetResponseMessage responseMessage = GSON.fromJson(output.toString(), UserGetResponseMessage.class);
+            if (responseMessage == null)
+                return null;
+
+            return responseMessage;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void sendReportSubmittion(final ReportSubmitMessage reportSubmitMessage) {
         try {
-            URL url = new URL(REPORT_SUBMITT_URL_API);
+            URL url = new URL(REPORT_SUBMIT_URL_API);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");

@@ -1,6 +1,6 @@
 package net.extus.messaging.user;
 
-import xyz.sethy.extus.api.user.User;
+import net.extus.api.user.User;
 
 import java.util.UUID;
 

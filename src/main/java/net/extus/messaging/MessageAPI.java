@@ -8,6 +8,7 @@ import net.extus.messaging.report.ReportIdMessage;
 import net.extus.messaging.report.ReportIdResponseMessage;
 import net.extus.messaging.report.ReportSubmitMessage;
 import net.extus.messaging.user.UserGetMessage;
+import net.extus.messaging.user.UserGetNameMessage;
 import net.extus.messaging.user.UserGetResponseMessage;
 
 import java.io.BufferedReader;
@@ -23,7 +24,7 @@ public class MessageAPI {
     private static final String REPORT_ID_URL_API = "https://api.extus.net/v1/report-id";
     private static final String REPORT_SUBMIT_URL_API = "https://api.extus.net/v1/report-submit";
     private static final String USER_GET_URL_API = "https://api.extus.net/v1/user";
-
+    private static final String USER_GET_NAME_URL_API = "https://api.extus.net/v1/user-name";
 
     public static AlertResponseMessage sendAlertMessage(final AlertMessage alertMessage) {
         try {
@@ -105,6 +106,45 @@ public class MessageAPI {
                 return null;
 
             if (!responseMessage.getServerId().equals(reportIdMessage.getServerId()))
+                return null;
+
+            return responseMessage;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static UserGetResponseMessage sendUserGetNameMessage(final UserGetNameMessage userGetNameMessage) {
+        try {
+            URL url = new URL(USER_GET_NAME_URL_API);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-type", "application/json");
+
+            String input = GSON.toJson(userGetNameMessage);
+
+            OutputStream outputStream = connection.getOutputStream();
+            outputStream.write(input.getBytes());
+            outputStream.close();
+
+            if (connection.getResponseCode() != 200) {
+                System.out.println(String.format("Response Code: %s", connection.getResponseCode()));
+                return null;
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            StringBuilder output = new StringBuilder();
+            String line;
+            while((line = reader.readLine()) != null) {
+                output.append(line);
+            }
+
+            UserGetResponseMessage responseMessage = GSON.fromJson(output.toString(), UserGetResponseMessage.class);
+            if (responseMessage == null)
                 return null;
 
             return responseMessage;

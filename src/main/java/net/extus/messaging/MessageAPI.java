@@ -115,7 +115,6 @@ public class MessageAPI {
         return null;
     }
 
-    @Deprecated
     public static UserGetResponseMessage sendUserGetAttributeMessage(final UserGetAttributeMessage userGetAttributeMessage) {
         try {
             URL url = new URL(USER_GET_ATTRIBUTE_URL_API);

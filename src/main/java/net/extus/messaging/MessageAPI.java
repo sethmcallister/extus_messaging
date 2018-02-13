@@ -7,10 +7,7 @@ import net.extus.messaging.alert.AlertResponseMessage;
 import net.extus.messaging.report.ReportIdMessage;
 import net.extus.messaging.report.ReportIdResponseMessage;
 import net.extus.messaging.report.ReportSubmitMessage;
-import net.extus.messaging.user.UserGetMessage;
-import net.extus.messaging.user.UserGetNameMessage;
-import net.extus.messaging.user.UserGetResponseMessage;
-import net.extus.messaging.user.UserUpdateMessage;
+import net.extus.messaging.user.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,11 +19,11 @@ import java.util.Objects;
 public class MessageAPI {
     private static final Gson GSON = new GsonBuilder().create();
     private static final String VIOLATION_URL_API = "https://api.extus.net/v1/violations";
-    private static final String REPORT_ID_URL_API = "https://api.extus.net/v1/report-id";
-    private static final String REPORT_SUBMIT_URL_API = "https://api.extus.net/v1/report-submit";
-    private static final String USER_GET_URL_API = "https://api.extus.net/v1/user";
-    private static final String USER_GET_NAME_URL_API = "https://api.extus.net/v1/user-name";
-    private static final String USER_UPDATE_URL_API = "https://api.extus.net/v1/user-update";
+    private static final String REPORT_ID_URL_API = "https://api.extus.net/v1/report/id";
+    private static final String REPORT_SUBMIT_URL_API = "https://api.extus.net/v1/report/submit";
+    private static final String USER_GET_URL_API = "https://api.extus.net/v1/user/uuid";
+    private static final String USER_GET_ATTRIBUTE_URL_API = "https://api.extus.net/v1/user/attribute";
+    private static final String USER_UPDATE_URL_API = "https://api.extus.net/v1/user/update";
 
     public static AlertResponseMessage sendAlertMessage(final AlertMessage alertMessage) {
         try {
@@ -118,15 +115,16 @@ public class MessageAPI {
         return null;
     }
 
-    public static UserGetResponseMessage sendUserGetNameMessage(final UserGetNameMessage userGetNameMessage) {
+    @Deprecated
+    public static UserGetResponseMessage sendUserGetAttributeMessage(final UserGetAttributeMessage userGetAttributeMessage) {
         try {
-            URL url = new URL(USER_GET_NAME_URL_API);
+            URL url = new URL(USER_GET_ATTRIBUTE_URL_API);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-type", "application/json");
 
-            String input = GSON.toJson(userGetNameMessage);
+            String input = GSON.toJson(userGetAttributeMessage);
 
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(input.getBytes());

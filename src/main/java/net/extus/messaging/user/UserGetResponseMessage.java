@@ -5,10 +5,12 @@ import net.extus.api.user.User;
 import java.util.UUID;
 
 public class UserGetResponseMessage {
+    private final UUID apiKey;
     private final UUID uuid;
     private final User user;
 
-    public UserGetResponseMessage(final UUID uuid, final User user) {
+    public UserGetResponseMessage(final UUID apiKey, final UUID uuid, final User user) {
+        this.apiKey = apiKey;
         this.uuid = uuid;
         this.user = user;
     }
@@ -19,5 +21,9 @@ public class UserGetResponseMessage {
 
     public User getUser() {
         return user;
+    }
+
+    public UUID getApiKey() {
+        return apiKey;
     }
 }

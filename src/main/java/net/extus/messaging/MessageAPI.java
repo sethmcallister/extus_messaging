@@ -143,9 +143,6 @@ public class MessageAPI {
             }
 
             UserGetResponseMessage responseMessage = GSON.fromJson(output.toString(), UserGetResponseMessage.class);
-            if (responseMessage == null)
-                return null;
-
             return responseMessage;
 
         } catch (Exception e) {
@@ -212,7 +209,7 @@ public class MessageAPI {
         }
     }
 
-    public static void sendUserUpdate(final UserUpdateMessage userUpdateMessage) {
+    public static UserUpdateResponseMessage sendUserUpdate(final UserUpdateMessage userUpdateMessage) {
         try {
             URL url = new URL(USER_UPDATE_URL_API);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -226,9 +223,25 @@ public class MessageAPI {
             outputStream.write(input.getBytes());
             outputStream.close();
 
+            if (connection.getResponseCode() != 200) {
+                System.out.println(String.format("Response Code: %s", connection.getResponseCode()));
+                return null;
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            StringBuilder output = new StringBuilder();
+            String line;
+            while((line = reader.readLine()) != null) {
+                output.append(line);
+            }
+
+            UserUpdateResponseMessage responseMessage = GSON.fromJson(output.toString(), UserUpdateResponseMessage.class);
+            return responseMessage;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 }
 
